@@ -122,7 +122,7 @@ namespace AppForm
             dgv1.Rows.Add("Musica x GB (Audio-Video)", 100);
             dgv1.Rows.Add("Juego (Detective)", 100);
             dgv1.Rows.Add("Juego (PC)", 200);
-            dgv1.Rows.Add("Windows Pack Drivers", 200);
+            dgv1.Rows.Add("Windows/ Pack Drivers", 200);
             dgv1.Rows.Add("Aplicaciones (PC/APK)", 100);
             dgv1.Rows.Add("Booteable USB", 500);
             dgv1.Rows.Add("Paquete Semanal", 500);
