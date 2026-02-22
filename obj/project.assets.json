@@ -322,24 +322,31 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\OLED\\.nuget\\packages\\": {}
+    "C:\\Users\\javie\\.nuget\\packages\\": {},
+    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\Luisi\\trabajo\\EstudioGrabacion\\visual\\Visual\\Visual.csproj",
+      "projectUniqueName": "D:\\Programacion\\Proyectos\\Aplicacion-de-Grabado-de-Archivos\\Visual.csproj",
       "projectName": "Visual",
-      "projectPath": "D:\\Luisi\\trabajo\\EstudioGrabacion\\visual\\Visual\\Visual.csproj",
-      "packagesPath": "C:\\Users\\OLED\\.nuget\\packages\\",
-      "outputPath": "D:\\Luisi\\trabajo\\EstudioGrabacion\\visual\\Visual\\obj\\",
+      "projectPath": "D:\\Programacion\\Proyectos\\Aplicacion-de-Grabado-de-Archivos\\Visual.csproj",
+      "packagesPath": "C:\\Users\\javie\\.nuget\\packages\\",
+      "outputPath": "D:\\Programacion\\Proyectos\\Aplicacion-de-Grabado-de-Archivos\\obj\\",
       "projectStyle": "PackageReference",
+      "fallbackFolders": [
+        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+      ],
       "configFilePaths": [
-        "C:\\Users\\OLED\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        "C:\\Users\\javie\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
         "net8.0-windows"
       ],
       "sources": {
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -352,7 +359,13 @@
         "warnAsError": [
           "NU1605"
         ]
-      }
+      },
+      "restoreAuditProperties": {
+        "enableAudit": "true",
+        "auditLevel": "low",
+        "auditMode": "direct"
+      },
+      "SdkAnalysisLevel": "9.0.300"
     },
     "frameworks": {
       "net8.0-windows7.0": {
@@ -382,7 +395,7 @@
             "privateAssets": "none"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.111/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.305/PortableRuntimeIdentifierGraph.json"
       }
     }
   }

@@ -10,8 +10,8 @@ namespace AppForm
         private TextBox txtPagoEfectivo;
         private TextBox txtPagoTransferencia;
         private Label lblDiferencia;
-        private Button btnRegistrar;
         private Button btnSoloCalcular;
+        private bool facturaRegistrada;
 
         private decimal total;
         private DataGridView dgvFacturas;
@@ -24,63 +24,57 @@ namespace AppForm
             this.contadorFacturas = contadorFacturas;
 
             Text = "Pago del Cliente";
-            Size = new Size(400, 300);
+            Size = new Size(520, 360);
+            StartPosition = FormStartPosition.CenterScreen;
 
             Label lblTotal = new Label
             {
                 Text = $"Total a pagar: {total:C}",
                 Location = new Point(20, 20),
-                AutoSize = true
+                Size = new Size(480, 40),
+                AutoSize = false
             };
 
-            lblTotal.Font = new Font("Segoe UI", 16, FontStyle.Bold | FontStyle.Italic); 
+            lblTotal.Font = new Font("Segoe UI", 16, FontStyle.Bold | FontStyle.Italic);
             lblTotal.ForeColor = Color.Black;
-            lblTotal.TextAlign = ContentAlignment.MiddleCenter; 
+            lblTotal.TextAlign = ContentAlignment.MiddleLeft;
 
             Label lblEfectivo = new Label
             {
                 Text = "Pago en efectivo:",
-                Location = new Point(20, 60),
+                Location = new Point(20, 80),
                 AutoSize = true
             };
             txtPagoEfectivo = new TextBox
             {
-                Location = new Point(150, 60),
-                Width = 100
+                Location = new Point(170, 78),
+                Width = 140
             };
 
             Label lblTransferencia = new Label
             {
                 Text = "Pago en transferencia:",
-                Location = new Point(20, 100),
+                Location = new Point(20, 125),
                 AutoSize = true
             };
             txtPagoTransferencia = new TextBox
             {
-                Location = new Point(150, 100),
-                Width = 100
+                Location = new Point(190, 123),
+                Width = 140
             };
 
             btnSoloCalcular = new Button
             {
-                Text = "Calcular diferencia",
-                Location = new Point(20, 140),
-                Width = 150
+                Text = "Calcular Diferencia",
+                Dock = DockStyle.Bottom,
+                Height = 40
             };
             btnSoloCalcular.Click += BtnSoloCalcular_Click;
-
-            btnRegistrar = new Button
-            {
-                Text = "Registrar factura",
-                Location = new Point(200, 140),
-                Width = 150
-            };
-            btnRegistrar.Click += BtnRegistrar_Click;
 
             lblDiferencia = new Label
             {
                 Text = "Diferencia: ",
-                Location = new Point(20, 180),
+                Location = new Point(20, 175),
                 AutoSize = true
             };
 
@@ -93,12 +87,18 @@ namespace AppForm
             Controls.Add(lblTransferencia);
             Controls.Add(txtPagoTransferencia);
             Controls.Add(btnSoloCalcular);
-            Controls.Add(btnRegistrar);
             Controls.Add(lblDiferencia);
+
+            FormClosing += PagoForm_FormClosing;
         }
 
         private void BtnSoloCalcular_Click(object sender, EventArgs e)
         {
+            if (facturaRegistrada)
+            {
+                return;
+            }
+
             decimal pagoEfectivo = 0, pagoTransferencia = 0;
             decimal.TryParse(txtPagoEfectivo.Text, out pagoEfectivo);
             decimal.TryParse(txtPagoTransferencia.Text, out pagoTransferencia);
@@ -113,21 +113,6 @@ namespace AppForm
             }
 
             lblDiferencia.Text = $"Total: {total:C} | Pagado: {pagoCliente:C} | Diferencia: {diferencia:C}";
-        }
-
-        private void BtnRegistrar_Click(object sender, EventArgs e)
-        {
-            decimal pagoEfectivo = 0, pagoTransferencia = 0;
-            decimal.TryParse(txtPagoEfectivo.Text, out pagoEfectivo);
-            decimal.TryParse(txtPagoTransferencia.Text, out pagoTransferencia);
-            decimal pagoCliente = pagoEfectivo + pagoTransferencia;
-            
-            if (pagoCliente < total)
-            {
-                MessageBox.Show("Monto insuficiente. La suma de pagos no cubre el total a pagar.",
-                                "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
 
             if (pagoEfectivo > total || (pagoEfectivo + pagoTransferencia) > total)
             {
@@ -135,14 +120,40 @@ namespace AppForm
                 if (pagoEfectivo < 0) pagoEfectivo = 0;
             }
 
-            dgvFacturas.Rows.Add(contadorFacturas, DateTime.Now.ToShortDateString(), total,
-                                pagoEfectivo, pagoTransferencia);
+            int totalIndex = -1;
+            for (int i = 0; i < dgvFacturas.Rows.Count; i++)
+            {
+                var valor = dgvFacturas.Rows[i].Cells["NoFactura"].Value;
+                if (valor != null && string.Equals(valor.ToString(), "TOTAL", StringComparison.OrdinalIgnoreCase))
+                {
+                    totalIndex = i;
+                    break;
+                }
+            }
+
+            if (totalIndex >= 0)
+            {
+                dgvFacturas.Rows.Insert(totalIndex, contadorFacturas, DateTime.Now.ToShortDateString(), total,
+                                        pagoEfectivo, pagoTransferencia);
+            }
+            else
+            {
+                dgvFacturas.Rows.Add(contadorFacturas, DateTime.Now.ToShortDateString(), total,
+                                    pagoEfectivo, pagoTransferencia);
+            }
 
             GuardarFacturaEnBD(contadorFacturas, total, pagoEfectivo, pagoTransferencia);
 
             contadorFacturas++;
-            DialogResult = DialogResult.OK;
-            Close();
+            facturaRegistrada = true;
+        }
+
+        private void PagoForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (facturaRegistrada)
+            {
+                DialogResult = DialogResult.OK;
+            }
         }
 
 

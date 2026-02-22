@@ -1,3 +1,7 @@
+using System;
+using System.Windows.Forms;
+using Microsoft.Win32;
+
 namespace AppForm;
 
 static class Program
@@ -14,6 +18,7 @@ static class Program
 
         try
         {
+            ConfigurarAutoInicio();
             Application.Run(new MainForm());
         }
         catch (Exception ex)
@@ -23,5 +28,28 @@ static class Program
                             MessageBoxButtons.OK,
                             MessageBoxIcon.Error);
         }
-    }    
+    }
+
+    private static void ConfigurarAutoInicio()
+    {
+        try
+        {
+            using (RegistryKey key = Registry.CurrentUser.OpenSubKey(
+                "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true))
+            {
+                if (key == null)
+                {
+                    return;
+                }
+
+                string appPath = Application.ExecutablePath;
+                string appName = "AplicacionDeGrabacion";
+                key.SetValue(appName, $"\"{appPath}\"");
+            }
+        }
+        catch
+        {
+            // No interrumpir el inicio si falla el registro.
+        }
+    }
 }
