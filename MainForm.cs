@@ -68,7 +68,7 @@ namespace AppForm
 
             dgv1.CellPainting += (s, e) =>
             {
-                if (e.ColumnIndex >= 0 && dgv1.Columns[e.ColumnIndex].Name == "Agregar" && e.RowIndex >= 0)
+                if (e?.Graphics != null && e.ColumnIndex >= 0 && dgv1.Columns[e.ColumnIndex].Name == "Agregar" && e.RowIndex >= 0)
                 {
                     e.Graphics.FillRectangle(new SolidBrush(dgv1.DefaultCellStyle.BackColor), e.CellBounds);
 
@@ -332,10 +332,13 @@ namespace AppForm
             StartPosition = FormStartPosition.Manual;
 
             // Posicionar en la esquina derecha de la pantalla
-            Screen screen = Screen.PrimaryScreen;
-            int x = screen.WorkingArea.Right - Width - 10;
-            int y = screen.WorkingArea.Top + 10;
-            Location = new Point(x, y);
+            Screen? screen = Screen.PrimaryScreen;
+            if (screen != null)
+            {
+                int x = screen.WorkingArea.Right - Width - 10;
+                int y = screen.WorkingArea.Top + 10;
+                Location = new Point(x, y);
+            }
 
             PrepararFilasColores(dgv1);
             AgregarFilaTotal(dgv1);
@@ -348,7 +351,7 @@ namespace AppForm
             ClientSize = new Size(ClientSize.Width, alturaTablaPrecios + alturaExtra);
         }
 
-        private void BtnAcercaDe_Click(object sender, EventArgs e)
+        private void BtnAcercaDe_Click(object? sender, EventArgs e)
         {
             AcercaDeForm acercaDe = new AcercaDeForm();
             acercaDe.ShowDialog();
@@ -376,7 +379,11 @@ namespace AppForm
                     continue;
                 }
 
-                string nombre = Convert.ToString(row.Cells["Informacion"].Value);
+                string? nombre = Convert.ToString(row.Cells["Informacion"].Value);
+                if (string.IsNullOrEmpty(nombre))
+                {
+                    continue;
+                }
                 if (string.Equals(nombre, "Show latino", StringComparison.OrdinalIgnoreCase))
                 {
                     row.DefaultCellStyle.BackColor = Color.LightSkyBlue;
@@ -449,7 +456,7 @@ namespace AppForm
                 return;
             }
 
-            if (!decimal.TryParse(Convert.ToString(row.Cells["Precio"].Value), out decimal precio))
+            if (!decimal.TryParse(Convert.ToString(row.Cells["Precio"].Value) ?? "", out decimal precio))
             {
                 return;
             }
@@ -481,7 +488,7 @@ namespace AppForm
                     int.TryParse(row.Cells["Cantidad"].Value.ToString(), out cantidad);
                 }
 
-                if (decimal.TryParse(Convert.ToString(row.Cells["Precio"].Value), out decimal precio))
+                if (decimal.TryParse(Convert.ToString(row.Cells["Precio"].Value) ?? "", out decimal precio))
                 {
                     totalCantidad += cantidad;
                     totalPago += precio * cantidad;
@@ -501,7 +508,9 @@ namespace AppForm
         private void CrearBaseDatos()
         {
             string exeFolder = AppDomain.CurrentDomain.BaseDirectory;
-            string parentFolder = Directory.GetParent(exeFolder).FullName;
+            var parentDir = Directory.GetParent(exeFolder);
+            if (parentDir == null) return;
+            string parentFolder = parentDir.FullName;
             string carpetaBD = Path.Combine(parentFolder, "Base de Datos");
             if (!Directory.Exists(carpetaBD))
             {
@@ -532,7 +541,9 @@ namespace AppForm
         {
             dgv.Rows.Clear();
             string exeFolder = AppDomain.CurrentDomain.BaseDirectory;
-            string parentFolder = Directory.GetParent(exeFolder).FullName;
+            var parentDir = Directory.GetParent(exeFolder);
+            if (parentDir == null) return;
+            string parentFolder = parentDir.FullName;
             string carpetaBD = Path.Combine(parentFolder, "Base de Datos");
             if (!Directory.Exists(carpetaBD))
             {
@@ -600,17 +611,17 @@ namespace AppForm
                     continue;
                 }
 
-                if (decimal.TryParse(Convert.ToString(row.Cells["PagoTotal"].Value), out decimal pagoTotal))
+                if (decimal.TryParse(Convert.ToString(row.Cells["PagoTotal"].Value) ?? "", out decimal pagoTotal))
                 {
                     totalPago += pagoTotal;
                 }
 
-                if (decimal.TryParse(Convert.ToString(row.Cells["PagoEfectivo"].Value), out decimal pagoEfectivo))
+                if (decimal.TryParse(Convert.ToString(row.Cells["PagoEfectivo"].Value) ?? "", out decimal pagoEfectivo))
                 {
                     totalEfectivo += pagoEfectivo;
                 }
 
-                if (decimal.TryParse(Convert.ToString(row.Cells["PagoTransferencia"].Value), out decimal pagoTransferencia))
+                if (decimal.TryParse(Convert.ToString(row.Cells["PagoTransferencia"].Value) ?? "", out decimal pagoTransferencia))
                 {
                     totalTransferencia += pagoTransferencia;
                 }
@@ -631,7 +642,9 @@ namespace AppForm
         private void LimpiarFacturasDB()
         {
             string exeFolder = AppDomain.CurrentDomain.BaseDirectory;
-            string parentFolder = Directory.GetParent(exeFolder).FullName;
+            var parentDir = Directory.GetParent(exeFolder);
+            if (parentDir == null) return;
+            string parentFolder = parentDir.FullName;
             string carpetaBD = Path.Combine(parentFolder, "Base de Datos");
             if (!Directory.Exists(carpetaBD))
             {
@@ -699,7 +712,9 @@ namespace AppForm
             try
             {
                 string exeFolder = AppDomain.CurrentDomain.BaseDirectory;
-                string parentFolder = Directory.GetParent(exeFolder).FullName;
+                var parentDir = Directory.GetParent(exeFolder);
+                if (parentDir == null) return 0;
+                string parentFolder = parentDir.FullName;
                 string carpetaBD = Path.Combine(parentFolder, "Base de Datos");
                 if (!Directory.Exists(carpetaBD))
                 {
