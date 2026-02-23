@@ -74,9 +74,9 @@ D:\Programacion\Proyectos\Aplicacion-de-Grabado-de-Archivos\obj\Debug\net8.0-win
 D:\Programacion\Proyectos\Aplicacion-de-Grabado-de-Archivos\obj\Debug\net8.0-windows\Visual.AssemblyInfo.cs
 D:\Programacion\Proyectos\Aplicacion-de-Grabado-de-Archivos\obj\Debug\net8.0-windows\Visual.csproj.CoreCompileInputs.cache
 D:\Programacion\Proyectos\Aplicacion-de-Grabado-de-Archivos\obj\Debug\net8.0-windows\Visual.sourcelink.json
-D:\Programacion\Proyectos\Aplicacion-de-Grabado-de-Archivos\obj\Debug\net8.0-windows\Visual.csproj.Up2Date
 D:\Programacion\Proyectos\Aplicacion-de-Grabado-de-Archivos\obj\Debug\net8.0-windows\Visual.dll
 D:\Programacion\Proyectos\Aplicacion-de-Grabado-de-Archivos\obj\Debug\net8.0-windows\refint\Visual.dll
 D:\Programacion\Proyectos\Aplicacion-de-Grabado-de-Archivos\obj\Debug\net8.0-windows\Visual.pdb
 D:\Programacion\Proyectos\Aplicacion-de-Grabado-de-Archivos\obj\Debug\net8.0-windows\Visual.genruntimeconfig.cache
 D:\Programacion\Proyectos\Aplicacion-de-Grabado-de-Archivos\obj\Debug\net8.0-windows\ref\Visual.dll
+D:\Programacion\Proyectos\Aplicacion-de-Grabado-de-Archivos\obj\Debug\net8.0-windows\Visual.csproj.Up2Date

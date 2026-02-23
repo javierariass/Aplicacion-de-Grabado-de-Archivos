@@ -109,7 +109,7 @@ namespace AppForm
 
             dgv1.Rows.Add("Animado (corto variado)", 2);
             dgv1.Rows.Add("Serie Animada", 3);
-            dgv1.Rows.Add("Pelicula animada", 5);
+            dgv1.Rows.Add("Pelicula Animada", 5);
             dgv1.Rows.Add("Show latino", 3);
             dgv1.Rows.Add("Novela", 3);
             dgv1.Rows.Add("Serie/Dorama", 4);
@@ -117,14 +117,14 @@ namespace AppForm
             dgv1.Rows.Add("Concurso/Reality", 7);
             dgv1.Rows.Add("Pelicula (AVI/MPG/VOB)", 7);
             dgv1.Rows.Add("Pelicula (HD/MP4)", 20);
-            dgv1.Rows.Add("Conversion x TV mp4", 50);
             dgv1.Rows.Add("Deporte", 10);
             dgv1.Rows.Add("Musica x GB (Audio-Video)", 100);
             dgv1.Rows.Add("Juego (Detective)", 100);
             dgv1.Rows.Add("Juego (PC)", 200);
-            dgv1.Rows.Add("Windows/ Pack Drivers", 200);
             dgv1.Rows.Add("Aplicaciones (PC/APK)", 100);
+            dgv1.Rows.Add("Windows/Pak Drivers", 200);
             dgv1.Rows.Add("Booteable USB", 500);
+            dgv1.Rows.Add("Conversion MP4 x TV", 50);
             dgv1.Rows.Add("Paquete Semanal", 500);
 
             dgv1.AllowUserToAddRows = false;
@@ -279,7 +279,9 @@ namespace AppForm
             Button btnLimpiarFacturas = new Button
             {
                 Text = "LIMPIAR FACTURA",
-                Height = 55,
+                Width = 200,
+                Height = 50,
+                Font = new Font("Segoe UI", 11, FontStyle.Bold),
                 Dock = DockStyle.Bottom
             };
             btnLimpiarFacturas.Click += (s, e) =>
@@ -400,6 +402,15 @@ namespace AppForm
                 {
                     row.DefaultCellStyle.BackColor = Color.LightPink;
                     row.DefaultCellStyle.ForeColor = Color.Maroon;
+                }
+                else if (string.Equals(nombre, "Pelicula Animada", StringComparison.OrdinalIgnoreCase))
+                {
+                    row.DefaultCellStyle.BackColor = Color.Orange;
+                    row.DefaultCellStyle.ForeColor = Color.Maroon;
+                }
+                else if (string.Equals(nombre, "Conversion MP4 x TV", StringComparison.OrdinalIgnoreCase))
+                {
+                    row.DefaultCellStyle.Font = new Font("Segoe UI", 10, FontStyle.Bold);
                 }
             }
         }
