@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 using Microsoft.Data.Sqlite;
@@ -10,6 +11,7 @@ namespace AppForm
     public partial class MainForm : Form
     {
         private int contadorFacturas = 1;
+        private readonly Dictionary<int, int> cantidadAnteriorPorFila = new Dictionary<int, int>();
         public MainForm()
         {
             InitializeComponent();
@@ -248,6 +250,26 @@ namespace AppForm
             };
 
             // Recalcular P. TOTAL al editar Cant.
+            dgv1.CellBeginEdit += (s, e) =>
+            {
+                if (e.ColumnIndex == dgv1.Columns["Cantidad"].Index && e.RowIndex >= 0)
+                {
+                    if (EsFilaTotal(dgv1, e.RowIndex))
+                    {
+                        return;
+                    }
+
+                    int previo = 0;
+                    var valor = dgv1.Rows[e.RowIndex].Cells["Cantidad"].Value;
+                    if (valor != null)
+                    {
+                        int.TryParse(valor.ToString(), out previo);
+                    }
+
+                    cantidadAnteriorPorFila[e.RowIndex] = previo;
+                }
+            };
+
             dgv1.CellEndEdit += (s, e) =>
             {
                 if (e.ColumnIndex == dgv1.Columns["Cantidad"].Index && e.RowIndex >= 0)
@@ -258,13 +280,27 @@ namespace AppForm
                     }
 
                     var celda = dgv1.Rows[e.RowIndex].Cells["Cantidad"];
-                    if (celda.Value != null && !int.TryParse(celda.Value.ToString(), out _))
+                    int cantidadIngresada = 0;
+                    if (celda.Value != null && !int.TryParse(celda.Value.ToString(), out cantidadIngresada))
                     {
                         MessageBox.Show("Error: La columna 'Cantidad' solo admite numeros enteros.",
                                         "Dato invalido",
                                         MessageBoxButtons.OK,
                                         MessageBoxIcon.Error);
                         celda.Value = null;
+                        cantidadAnteriorPorFila.Remove(e.RowIndex);
+                    }
+                    else
+                    {
+                        int previo = 0;
+                        if (cantidadAnteriorPorFila.TryGetValue(e.RowIndex, out int anterior))
+                        {
+                            previo = anterior;
+                        }
+
+                        int totalCantidad = previo + cantidadIngresada;
+                        celda.Value = totalCantidad == 0 ? null : totalCantidad;
+                        cantidadAnteriorPorFila.Remove(e.RowIndex);
                     }
 
                     ActualizarFilaTotal(dgv1, e.RowIndex);
@@ -331,15 +367,6 @@ namespace AppForm
             ClientSize = new Size(anchoFinal + 20, 650);
             StartPosition = FormStartPosition.Manual;
 
-            // Posicionar en la esquina derecha de la pantalla
-            Screen? screen = Screen.PrimaryScreen;
-            if (screen != null)
-            {
-                int x = screen.WorkingArea.Right - Width - 10;
-                int y = screen.WorkingArea.Top + 10;
-                Location = new Point(x, y);
-            }
-
             PrepararFilasColores(dgv1);
             AgregarFilaTotal(dgv1);
             ActualizarTotales(dgv1);
@@ -349,6 +376,15 @@ namespace AppForm
             int alturaTablaPrecios = dgv1.ColumnHeadersHeight + (dgv1.RowTemplate.Height * filasPrecios) + 2;
             int alturaExtra = panelBotones.Height + menuStrip.Height + tabControl.ItemSize.Height + 40;
             ClientSize = new Size(ClientSize.Width, alturaTablaPrecios + alturaExtra);
+
+            // Posicionar centrado y pegado a la barra de tareas (con tamanio final)
+            Screen? screen = Screen.PrimaryScreen;
+            if (screen != null)
+            {
+                int x = screen.WorkingArea.Left + (screen.WorkingArea.Width - Width) / 2;
+                int y = screen.WorkingArea.Bottom - Height;
+                Location = new Point(x, y);
+            }
         }
 
         private void BtnAcercaDe_Click(object? sender, EventArgs e)
@@ -384,14 +420,10 @@ namespace AppForm
                 {
                     continue;
                 }
-                if (string.Equals(nombre, "Show latino", StringComparison.OrdinalIgnoreCase))
+                if (string.Equals(nombre, "Show latino", StringComparison.OrdinalIgnoreCase) ||
+                    string.Equals(nombre, "Novela", StringComparison.OrdinalIgnoreCase))
                 {
                     row.DefaultCellStyle.BackColor = Color.LightSkyBlue;
-                    row.DefaultCellStyle.ForeColor = Color.Black;
-                }
-                else if (string.Equals(nombre, "Novela", StringComparison.OrdinalIgnoreCase))
-                {
-                    row.DefaultCellStyle.BackColor = Color.DeepSkyBlue;
                     row.DefaultCellStyle.ForeColor = Color.Black;
                 }
                 else if (string.Equals(nombre, "Serie/Dorama", StringComparison.OrdinalIgnoreCase))
@@ -418,6 +450,11 @@ namespace AppForm
                 else if (string.Equals(nombre, "Conversion MP4 x TV", StringComparison.OrdinalIgnoreCase))
                 {
                     row.DefaultCellStyle.Font = new Font("Segoe UI", 10, FontStyle.Bold);
+                }
+                else if (string.Equals(nombre, "Musica x GB (Audio-Video)", StringComparison.OrdinalIgnoreCase))
+                {
+                    row.DefaultCellStyle.BackColor = Color.LightCoral;
+                    row.DefaultCellStyle.ForeColor = Color.Black;
                 }
             }
         }
