@@ -168,7 +168,7 @@ namespace AppForm
 
             Button btnFacturar = new Button
             {
-                Text = "Facturar",
+                Text = "FACTURAR",
                 Width = 200,
                 Height = 50,
                 Font = new Font("Segoe UI", 11, FontStyle.Bold),
@@ -544,18 +544,7 @@ namespace AppForm
 
         private void CrearBaseDatos()
         {
-            string exeFolder = AppDomain.CurrentDomain.BaseDirectory;
-            var parentDir = Directory.GetParent(exeFolder);
-            if (parentDir == null) return;
-            string parentFolder = parentDir.FullName;
-            string carpetaBD = Path.Combine(parentFolder, "Base de Datos");
-            if (!Directory.Exists(carpetaBD))
-            {
-                Directory.CreateDirectory(carpetaBD);
-            }
-
-            string rutaDB = Path.Combine(carpetaBD, "facturas.db");
-            using (var connection = new SqliteConnection($"Data Source={rutaDB}"))
+            using (var connection = new SqliteConnection(BaseDatos.CadenaConexion()))
             {
                 connection.Open();
 
@@ -577,17 +566,7 @@ namespace AppForm
         private void CargarFacturas(DataGridView dgv)
         {
             dgv.Rows.Clear();
-            string exeFolder = AppDomain.CurrentDomain.BaseDirectory;
-            var parentDir = Directory.GetParent(exeFolder);
-            if (parentDir == null) return;
-            string parentFolder = parentDir.FullName;
-            string carpetaBD = Path.Combine(parentFolder, "Base de Datos");
-            if (!Directory.Exists(carpetaBD))
-            {
-                Directory.CreateDirectory(carpetaBD);
-            }
-            string rutaDB = Path.Combine(carpetaBD, "facturas.db");
-            using (var connection = new SqliteConnection($"Data Source={rutaDB}"))
+            using (var connection = new SqliteConnection(BaseDatos.CadenaConexion()))
             {
                 connection.Open();
 
@@ -678,18 +657,7 @@ namespace AppForm
 
         private void LimpiarFacturasDB()
         {
-            string exeFolder = AppDomain.CurrentDomain.BaseDirectory;
-            var parentDir = Directory.GetParent(exeFolder);
-            if (parentDir == null) return;
-            string parentFolder = parentDir.FullName;
-            string carpetaBD = Path.Combine(parentFolder, "Base de Datos");
-            if (!Directory.Exists(carpetaBD))
-            {
-                Directory.CreateDirectory(carpetaBD);
-            }
-
-            string rutaDB = Path.Combine(carpetaBD, "facturas.db");
-            using (var connection = new SqliteConnection($"Data Source={rutaDB}"))
+            using (var connection = new SqliteConnection(BaseDatos.CadenaConexion()))
             {
                 connection.Open();
 
@@ -748,18 +716,7 @@ namespace AppForm
         {
             try
             {
-                string exeFolder = AppDomain.CurrentDomain.BaseDirectory;
-                var parentDir = Directory.GetParent(exeFolder);
-                if (parentDir == null) return 0;
-                string parentFolder = parentDir.FullName;
-                string carpetaBD = Path.Combine(parentFolder, "Base de Datos");
-                if (!Directory.Exists(carpetaBD))
-                {
-                    Directory.CreateDirectory(carpetaBD);
-                }
-
-                string rutaDB = Path.Combine(carpetaBD, "facturas.db");
-                using (var connection = new SqliteConnection($"Data Source={rutaDB}"))
+                using (var connection = new SqliteConnection(BaseDatos.CadenaConexion()))
                 {
                     connection.Open();
 

@@ -29,7 +29,7 @@ namespace AppForm
 
             Label lblTotal = new Label
             {
-                Text = $"Total a pagar: {total:C}",
+                Text = $"Total a pagar: ${total:0.##}",
                 Location = new Point(20, 20),
                 Size = new Size(480, 40),
                 AutoSize = false
@@ -50,6 +50,7 @@ namespace AppForm
                 Location = new Point(170, 78),
                 Width = 140
             };
+            txtPagoEfectivo.KeyDown += TextBox_KeyDown;
 
             Label lblTransferencia = new Label
             {
@@ -62,6 +63,7 @@ namespace AppForm
                 Location = new Point(190, 123),
                 Width = 140
             };
+            txtPagoTransferencia.KeyDown += TextBox_KeyDown;
 
             btnSoloCalcular = new Button
             {
@@ -92,6 +94,15 @@ namespace AppForm
             FormClosing += PagoForm_FormClosing;
         }
 
+        private void TextBox_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                e.SuppressKeyPress = true;
+                BtnSoloCalcular_Click(sender, e);
+            }
+        }
+
         private void BtnSoloCalcular_Click(object sender, EventArgs e)
         {
             if (facturaRegistrada)
@@ -112,7 +123,7 @@ namespace AppForm
                 return;
             }
 
-            lblDiferencia.Text = $"Total: {total:C} | Pagado: {pagoCliente:C} | Diferencia: {diferencia:C}";
+            lblDiferencia.Text = $"Total: ${total:0.##} | Pagado: ${pagoCliente:0.##} | Diferencia: ${diferencia:0.##}";
 
             if (pagoEfectivo > total || (pagoEfectivo + pagoTransferencia) > total)
             {
@@ -159,16 +170,7 @@ namespace AppForm
 
         private void GuardarFacturaEnBD(int noFactura, decimal total, decimal pagoEfectivo, decimal pagoTransferencia)
         {
-            string exeFolder = AppDomain.CurrentDomain.BaseDirectory;
-            string parentFolder = Directory.GetParent(exeFolder).FullName;
-            string carpetaBD = Path.Combine(parentFolder, "Base de Datos");
-            if (!Directory.Exists(carpetaBD))
-            {
-                Directory.CreateDirectory(carpetaBD);
-            }
-
-            string rutaDB = Path.Combine(carpetaBD, "facturas.db");
-            using (var connection = new SqliteConnection($"Data Source={rutaDB}"))
+            using (var connection = new SqliteConnection(BaseDatos.CadenaConexion()))
             {
                 connection.Open();
 
